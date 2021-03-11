@@ -1,0 +1,29 @@
+{
+  "buyers": [
+    {
+      "id": 1,
+      "name": "buyer1",
+      "startingBudget": 500.0
+    },
+    {
+      "id": 2,
+      "name": "buyer2",
+      "startingBudget": 5000.0
+    },
+    {
+      "id": 3,
+      "name": "buyer3",
+      "startingBudget": 1000.0
+    },
+    {
+      "id": 4,
+      "name": "buyer4",
+      "startingBudget": 100.0
+    },
+    {
+      "id": 5,
+      "name": "buyer5",
+      "startingBudget": 1500.0
+    }
+  ]
+}

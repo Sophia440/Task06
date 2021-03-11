@@ -1,0 +1,19 @@
+{
+  "lots": [
+    {
+      "id": 1,
+      "name": "lot1",
+      "startingPrice": 1000.0
+    },
+    {
+      "id": 2,
+      "name": "lot2",
+      "startingPrice": 500.0
+    },
+    {
+      "id": 3,
+      "name": "lot3",
+      "startingPrice": 150.0
+    }
+  ]
+}
