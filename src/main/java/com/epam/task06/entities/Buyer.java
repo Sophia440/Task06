@@ -6,8 +6,8 @@ public class Buyer implements Runnable {
     private int id;
     private String name;
     private BigDecimal startingBudget;
-    private BigDecimal currentBudget;
     private BigDecimal activeBudget;
+    private boolean wantsToBid;
 
     public Buyer() {
     }
@@ -24,12 +24,12 @@ public class Buyer implements Runnable {
         this.startingBudget = startingBudget;
     }
 
-    public void setCurrentBudget(BigDecimal currentBudget) {
-        this.currentBudget = currentBudget;
-    }
-
     public void setActiveBudget(BigDecimal activeBudget) {
         this.activeBudget = activeBudget;
+    }
+
+    public void setWantsToBid(boolean wantsToBid) {
+        this.wantsToBid = wantsToBid;
     }
 
     public int getId() {
@@ -40,22 +40,22 @@ public class Buyer implements Runnable {
         return startingBudget;
     }
 
-    public BigDecimal getCurrentBudget() {
-        return currentBudget;
-    }
-
     public BigDecimal getActiveBudget() {
         return activeBudget;
     }
 
+    public boolean isWantsToBid() {
+        return wantsToBid;
+    }
+
     @Override
     public String toString() {
-        return "Buyer{" + "id=" + id + ", name='" + name + '}';
+        return "Buyer #" + id + ", " + name + ", budget: " + startingBudget + ", active: " + activeBudget;
     }
 
     @Override
     public void run() {
         Auction auction = Auction.getInstance();
-        boolean canAfford = auction.makeDecision(this);
+        auction.makeDecision(this);
     }
 }
