@@ -1,0 +1,19 @@
+{
+  "lots": [
+    {
+      "id": 1,
+      "name": "Chinese porcelain vase",
+      "startingPrice": 1000.0
+    },
+    {
+      "id": 2,
+      "name": "Famous painting by famous artist",
+      "startingPrice": 800.0
+    },
+    {
+      "id": 3,
+      "name": "Silver pendant",
+      "startingPrice": 500.0
+    }
+  ]
+}

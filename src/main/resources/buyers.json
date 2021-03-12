@@ -1,0 +1,29 @@
+{
+  "buyers": [
+    {
+      "id": 1,
+      "name": "John Smith",
+      "startingBudget": 1000.0
+    },
+    {
+      "id": 2,
+      "name": "Mary White",
+      "startingBudget": 1500.0
+    },
+    {
+      "id": 3,
+      "name": "Alice Johnson",
+      "startingBudget": 2000.0
+    },
+    {
+      "id": 4,
+      "name": "James Price",
+      "startingBudget": 2500.0
+    },
+    {
+      "id": 5,
+      "name": "Michael Davis",
+      "startingBudget": 3000.0
+    }
+  ]
+}
