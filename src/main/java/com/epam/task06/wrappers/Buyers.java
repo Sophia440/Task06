@@ -1,10 +1,11 @@
-package com.epam.task06.wrapper;
+package com.epam.task06.wrappers;
 
 import com.epam.task06.entities.Buyer;
 
 import java.util.List;
 
 public class Buyers {
+
     private List<Buyer> buyers;
 
     public Buyers() {

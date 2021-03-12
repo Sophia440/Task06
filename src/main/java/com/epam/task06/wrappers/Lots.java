@@ -1,4 +1,4 @@
-package com.epam.task06.wrapper;
+package com.epam.task06.wrappers;
 
 import com.epam.task06.entities.Lot;
 

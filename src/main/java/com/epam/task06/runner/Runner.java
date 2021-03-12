@@ -2,21 +2,29 @@ package com.epam.task06.runner;
 
 import com.epam.task06.data.DataException;
 import com.epam.task06.data.JsonReader;
-import com.epam.task06.entities.Buyer;
+import com.epam.task06.entities.Lot;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Runner {
-    private static final String BUYERS_FILE = "./src/main/resources/buyers.json";
+    private static final Logger LOGGER = LogManager.getLogger(Runner.class);
+    private static final String LOTS_FILE = "./src/main/resources/lots.json";
 
-    public static void main(String[] args) throws DataException {
+    public static void main(String[] args) {
         JsonReader reader = new JsonReader();
-        List<Buyer> buyers = reader.readBuyers(BUYERS_FILE);
+        List<Lot> lots = null;
+        try {
+            lots = reader.readLots(LOTS_FILE);
+        } catch (DataException exception) {
+            LOGGER.warn(exception.getMessage(), exception);
+        }
 
-        ExecutorService executor = Executors.newFixedThreadPool(buyers.size());
-        buyers.forEach(buyer -> executor.submit(buyer));
-        executor.shutdown();
+        ExecutorService pool = Executors.newSingleThreadExecutor();
+        lots.forEach(lot -> pool.submit(lot));
+        pool.shutdown();
     }
 }
