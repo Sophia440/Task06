@@ -15,6 +15,7 @@ public class Lot implements Runnable {
     private BigDecimal startingPrice;
     private BigDecimal currentPrice;
     private BigDecimal bid;
+    private int currentBuyerId;
 
     public Lot() {
 
@@ -32,8 +33,28 @@ public class Lot implements Runnable {
         this.startingPrice = startingPrice;
     }
 
+    public void setCurrentBuyerId(int currentBuyerId) {
+        this.currentBuyerId = currentBuyerId;
+    }
+
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
     public BigDecimal getCurrentPrice() {
         return currentPrice;
+    }
+
+    public BigDecimal getBid() {
+        return bid;
+    }
+
+    public int getCurrentBuyerId() {
+        return currentBuyerId;
+    }
+
+    public void raisePrice() {
+        this.currentPrice.add(this.bid);
     }
 
     @Override
@@ -55,6 +76,7 @@ public class Lot implements Runnable {
         Auction auction = Auction.getInstance();
         auction.setCurrentLot(this);
         auction.startBiddingProcess();
+        System.out.println();
         try {
             TimeUnit.MILLISECONDS.sleep(TRADING_TIME);
         } catch (InterruptedException exception) {

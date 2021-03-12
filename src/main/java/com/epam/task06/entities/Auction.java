@@ -21,10 +21,11 @@ public class Auction {
 
     private static final AtomicReference<Auction> INSTANCE = new AtomicReference<>();
     private static final Lock INSTANCE_LOCK = new ReentrantLock();
+    private static final Lock DECISION_LOCK = new ReentrantLock();
 
     private static final JsonReader READER = new JsonReader();
     private static final String BUYERS_FILE = "./src/main/resources/buyers.json";
-    private static final BigDecimal PERCENTAGE_FOR_MINIMAL_BUDGET = BigDecimal.valueOf(0.2);
+    private static final BigDecimal PERCENTAGE_FOR_ACTIVE_BUDGET = BigDecimal.valueOf(0.8);
 
     private List<Buyer> buyers;
     private Lot currentLot;
@@ -43,7 +44,7 @@ public class Auction {
                     auction.buyers.forEach(buyer -> {
                         BigDecimal startingBudget = buyer.getStartingBudget();
                         buyer.setCurrentBudget(startingBudget);
-                        buyer.setMinimalBudget(startingBudget.multiply(PERCENTAGE_FOR_MINIMAL_BUDGET));
+                        buyer.setActiveBudget(startingBudget.multiply(PERCENTAGE_FOR_ACTIVE_BUDGET));
                     });
                     INSTANCE.getAndSet(auction);
                 }
@@ -84,18 +85,50 @@ public class Auction {
         });
     }
 
-    public void makeDecision(Buyer buyer) {
-        System.out.println("Buyer #" + buyer.getId());
-        BigDecimal currentBudget = buyer.getCurrentBudget();
+    public boolean makeDecision(Buyer buyer) {
+        DECISION_LOCK.lock();
         BigDecimal currentLotPrice = currentLot.getCurrentPrice();
-        System.out.println("Current budget = " + currentBudget);
-        System.out.println("Current lot price = " + currentLotPrice);
-        int comparisonResult = currentBudget.compareTo(currentLotPrice);
-        System.out.println("Can afford: " + canAfford(comparisonResult));
+        BigDecimal bid = currentLot.getBid();
+        BigDecimal newLotPrice = currentLotPrice.add(bid);
+        BigDecimal activeBudget = buyer.getActiveBudget();
+        System.out.println("Buyer #" + buyer.getId() + " has " + activeBudget + " active money");
+        System.out.println("Current price of the lot: " + currentLotPrice);
+        System.out.println("Raised price: " + newLotPrice);
+        int comparisonResult = activeBudget.compareTo(newLotPrice);
+        if (canAfford(comparisonResult)) {
+            System.out.println("Can afford, changing buyers");
+            BigDecimal newActiveBudget = activeBudget.subtract(newLotPrice);
+            changeCurrentBuyer(buyer, newActiveBudget, currentLotPrice, newLotPrice);
+            currentLot.raisePrice();
+        } else {
+            System.out.println("Can't afford :(");
+        }
+        System.out.println();
+        DECISION_LOCK.unlock();
+        return canAfford(comparisonResult);
     }
 
-    public boolean canAfford(int comparisonResult) {
-        if (comparisonResult > 0) {
+    private void changeCurrentBuyer(Buyer buyer, BigDecimal newActiveBudget, BigDecimal currentLotPrice,
+                                    BigDecimal newLotPrice) {
+        int oldBuyerId = currentLot.getCurrentBuyerId();
+        if (oldBuyerId != 0) {
+            System.out.println("Buyer #" + oldBuyerId + " wanted to buy");
+            buyers.forEach(buyerInList -> {
+                if (buyerInList.getId() == oldBuyerId) {
+                    BigDecimal oldBuyerActiveBudget = buyerInList.getActiveBudget();
+                    buyerInList.setActiveBudget(oldBuyerActiveBudget.add(currentLotPrice));
+                }
+            });
+        }
+        int newBuyerId = buyer.getId();
+        currentLot.setCurrentBuyerId(newBuyerId);
+        currentLot.setCurrentPrice(newLotPrice);
+        buyer.setActiveBudget(newActiveBudget);
+        System.out.println("Changing buyers complete! Buyer #" + newBuyerId + " is the new buyer");
+    }
+
+    private boolean canAfford(int comparisonResult) {
+        if (comparisonResult >= 0) {
             return true;
         }
         return false;
