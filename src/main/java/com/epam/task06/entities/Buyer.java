@@ -8,7 +8,6 @@ public class Buyer implements Runnable {
     private BigDecimal startingBudget;
     private BigDecimal currentBudget;
     private BigDecimal minimalBudget;
-    private static final BigDecimal PERCENTAGE_FOR_MINIMAL_BUDGET = BigDecimal.valueOf(0.2);
 
     public Buyer() {
     }
@@ -25,6 +24,26 @@ public class Buyer implements Runnable {
         this.startingBudget = startingBudget;
     }
 
+    public void setCurrentBudget(BigDecimal currentBudget) {
+        this.currentBudget = currentBudget;
+    }
+
+    public void setMinimalBudget(BigDecimal minimalBudget) {
+        this.minimalBudget = minimalBudget;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public BigDecimal getStartingBudget() {
+        return startingBudget;
+    }
+
+    public BigDecimal getCurrentBudget() {
+        return currentBudget;
+    }
+
     @Override
     public String toString() {
         return "Buyer{" + "id=" + id + ", name='" + name + '}';
@@ -32,10 +51,11 @@ public class Buyer implements Runnable {
 
     @Override
     public void run() {
-        this.minimalBudget = startingBudget.multiply(PERCENTAGE_FOR_MINIMAL_BUDGET);
-        this.currentBudget = startingBudget;
-        System.out.println(this.id + " min = " + this.minimalBudget);
         Auction auction = Auction.getInstance();
-        auction.method();
+        auction.makeDecision(this);
     }
+
+//    public boolean makeDecision() {
+//
+//    }
 }
